@@ -16,113 +16,114 @@
 ///
 
 
-#include "mouse.h"	// for the declaration of types, constants, variables and functions
-
+#include "mouse.h"	// for the declaration of types, constants, variables and function
 
 void AvoidObstacle()
 {
+    void TouchBar();
     mouseMode = MOUSE_MODE_OBSTACLE_AVOIDING;
 
     for (;;) {
         // first move forward
-        ControlMouse(MOUSE_ACTION_FORWARD);
+        
 
-        // first, check the status of touch bars
-        if (!touchBarFrontLeft && !touchBarFrontRight) {
-            // neither is touched (i.e., both the values are zero)
-
-            // then check the status of IF sensors
-            if (!infraredFrontLeft && !infraredFrontRight) {
-                // neither is touched (i.e., both the values are zero)
-                // then, back to the loop
+        
+            if (infraredFrontLeft && infraredFrontRight) {
+                // both touched; reverse
+            ControlMouse(MOUSE_ACTION_STOP);
+            Delay(100);
+            ControlMouse(MOUSE_ACTION_REVERSE);
+            Delay(180);
+            ControlMouse(MOUSE_ACTION_TURNAROUND);
+            Delay(180);
+            //TouchBar();
             }
             else if (infraredFrontLeft && !infraredFrontRight) {
                 // left sensor detects; avoid left obstacle
+            ControlMouse(MOUSE_ACTION_STOP);
+            Delay(100);
+            ControlMouse(MOUSE_ACTION_REVERSE);
+            Delay(180);
+            ControlMouse(MOUSE_ACTION_TURNRIGHT);
+            Delay(180);
+            //TouchBar();
 
             }
             else if (!infraredFrontLeft && infraredFrontRight) {
                 // right sensor detects; avoid right obstacle
+            ControlMouse(MOUSE_ACTION_STOP);
+            Delay(100);
+            ControlMouse(MOUSE_ACTION_REVERSE);
+            Delay(180);
+            ControlMouse(MOUSE_ACTION_TURNLEFT);
+            Delay(180);
+            //TouchBar();
 
-            }
-            else {
-                // both sensors detect; avoid front obstacle
-                ControlMouse(MOUSE_ACTION_STOP);
-                ControlMouse(MOUSE_ACTION_REVERSE);
-                ControlMouse(MOUSE_ACTION_TURNAROUND);	// 180 dgree turn
-            }
-        }
-        else if (touchBarFrontLeft && !touchBarFrontRight) {
+            } 
+         
+        else {  
+        ControlMouse(MOUSE_ACTION_FORWARD);
+        //TouchBar();
+        }   
+
+    } 
+// end of for() loop
+}
+/*void TouchBar(){
+  
+         if (touchBarFrontLeft && !touchBarFrontRight) {
             // left bar is touched; avoid left obstacle
             ControlMouse(MOUSE_ACTION_STOP);
+            Delay(100);
             ControlMouse(MOUSE_ACTION_REVERSE);
+            Delay(180);
             ControlMouse(MOUSE_ACTION_TURNRIGHT);
+            Delay(180);
         }
         else if (!touchBarFrontLeft && touchBarFrontRight) {
             // right bar is touched; avoid right obstacle
             ControlMouse(MOUSE_ACTION_STOP);
+            Delay(100);
             ControlMouse(MOUSE_ACTION_REVERSE);
+            Delay(180);
             ControlMouse(MOUSE_ACTION_TURNLEFT);
+            Delay(180);
         }
-        else {
+        else if (touchBarFrontLeft && touchBarFrontRight) {
             // both bars are touched; avoid front obstacle
             ControlMouse(MOUSE_ACTION_STOP);
+            Delay(100);
             ControlMouse(MOUSE_ACTION_REVERSE);
-            ControlMouse(MOUSE_ACTION_TURNAROUND);	// 180 dgree turn
-        }
-    } // end of for() loop
+            Delay(180);
+            ControlMouse(MOUSE_ACTION_TURNAROUND);
+            Delay(180);
+        }// 180 dgree turn  
+        else {
+        ControlMouse(MOUSE_ACTION_FORWARD);
+        }  
 }
-
-
+  */
 void LineFollowing ()
 {
     mouseMode = MOUSE_MODE_OBSTACLE_AVOIDING;
 
     for (;;) {
-        // first move forward
-        ControlMouse(MOUSE_ACTION_FORWARD);
-
-        // first, check the status of touch bars
-        if (!touchBarFrontLeft && !touchBarFrontRight) {
-            // neither is touched (i.e., both the values are zero)
-
-            // then check the status of IF sensors
-            if (!infraredFrontLeft && !infraredFrontRight) {
-                // neither is touched (i.e., both the values are zero)
-                // then, back to the loop
-                break;
-            }
-            else if (infraredFrontLeft) {
-                // left sensor detects; avoid left obstacle
-
-            }
-            else if (infraredFrontRight) {
-                // right sensor detects; avoid right obstacle
-
-            }
-            else {
-                // both sensors detect; avoid front obstacle
-                ControlMouse(MOUSE_ACTION_STOP);
-                ControlMouse(MOUSE_ACTION_REVERSE);
-                ControlMouse(MOUSE_ACTION_TURNAROUND);	// 180 dgree turn
-            }
+    ADC1SC1 = 0;		/*PTD0/AD0 for ADC*/
+	while(ADC1SC1_COCO == 0){     //test coco bit
+	}
+	
+	if( ADC1RL > THRESH0){
+        ControlMouse(MOUSE_ACTION_TURNRIGHT);
+        Delay(10);
+        } 
+        else if (ADC)  
+        {
+        ControlMouse(MOUSE_ACTION_TURNLEFT);
+        Delay(10);
         }
-        else if (touchBarFrontLeft) {
-            // left bar is touched; avoid left obstacle
-            ControlMouse(MOUSE_ACTION_STOP);
-            ControlMouse(MOUSE_ACTION_REVERSE);
-            ControlMouse(MOUSE_ACTION_TURNRIGHT);
-        }
-        else if (touchBarFrontRight) {
-            // right bar is touched; avoid right obstacle
-            ControlMouse(MOUSE_ACTION_STOP);
-            ControlMouse(MOUSE_ACTION_REVERSE);
-            ControlMouse(MOUSE_ACTION_TURNLEFT);
-        }
+
         else {
-            // both bars are touched; avoid front obstacle
-            ControlMouse(MOUSE_ACTION_STOP);
-            ControlMouse(MOUSE_ACTION_REVERSE);
-            ControlMouse(MOUSE_ACTION_TURNAROUND);	// 180 dgree turn
+            ControlMouse(MOUSE_ACTION_FORWARD);	// 180 dgree turn
         }
     } // end of for() loop
 }

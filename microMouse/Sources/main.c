@@ -144,7 +144,8 @@
 
 void main(void)
 {
-    byte tbfr, tbfl, tbrr, tbrl;
+    byte tbfr, tbfl, tbrr, tbrl, irfl, irfr;
+    
     
     DisableInterrupts;
     SOPT = 0x00; //disable watchdog
@@ -206,25 +207,31 @@ void main(void)
 
     PTAPE = 0xFF;   // enable port A pullups for touchbar switches and infrared sensors
     PTADD = 0x00;   // set port A as input
+    //THRESH0 = 82;    // LDR threshold
+    //THRESH1 = 73;    // LDR threshold
 
     tbfl = touchBarFrontLeft;
     tbfr = touchBarFrontRight;
-    if ((tbfl == 0) && (tbfr == 0)) {
-        mouseMode = MOUSE_MODE_DEBUG;
-        Debug();
+    tbrr = touchBarRearRight;
+    tbrl = touchBarRearLeft;
+    irfl = lineFollowingFrontLeft;
+    irfr = lineFollowingFrontRight;
+    if ((tbfl == 1) && (tbfl == 1)){
+    Debug();
     }
-    else if ((tbfl == 0) && (tbfr == 1)) {
+    if ((tbfl == 0) && (tbfr == 1)) {
         mouseMode = MOUSE_MODE_COMBAT;
         Combat();
     }
     else if ((tbrl == 1) && (tbrr == 0)) {
         mouseMode = MOUSE_MODE_LINE_FOLLOWING;
         LineFollowing();
-    }
-    else {
-        mouseMode = MOUSE_MODE_OBSTACLE_AVOIDING;
-        AvoidObstacle();
-    }
+    } else {
+    mouseMode = MOUSE_MODE_OBSTACLE_AVOIDING;
+        AvoidObstacle();}
+    
+        
+    
 
     for (;;) {
         // do nothing; just waiting for interrupts
