@@ -88,7 +88,9 @@ void ControlMouse(MouseAction action)
         if (mouseStatus != MOUSE_STATUS_TURNAROUND) {
             mouseStatus = MOUSE_STATUS_TURNAROUND;
         }
-        break;        
+        break;
+     
+
 
     } // end of switch()
 }
